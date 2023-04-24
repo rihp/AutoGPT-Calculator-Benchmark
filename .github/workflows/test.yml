@@ -1,0 +1,18 @@
+name: AutoGPT Workflow Test
+
+on: workflow_dispatch
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout AutoGPT repository
+      uses: actions/checkout@v2
+      with:
+        repository: Significant-Gravitas/Auto-GPT
+        ref: v0.2.2
+        path: autogpt
+        
+    - name: List directory
+      run: |
+        ls
