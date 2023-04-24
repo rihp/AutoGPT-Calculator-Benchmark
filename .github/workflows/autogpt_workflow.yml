@@ -29,11 +29,13 @@ jobs:
         docker info
 
     - name: Upgrade pip and install dependencies
+      working-directory: autogpt
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
     - name: Configure .env file
+      working-directory: autogpt
       run: |
         $templateContent = Get-Content -Path .env_template -Raw
         $apiKeyReplacement = $templateContent -replace "your-openai-api-key", "${{ secrets.OPENAI_API_KEY }}"
@@ -41,10 +43,12 @@ jobs:
         Set-Content -Path .env -Value $configContent
 
     - name: Create auto-gpt.json file
+      working-directory: autogpt
       run: |
         New-Item -ItemType File -Path auto-gpt.json -Value "{}"
 
     - name: Run AutoGPT command
+      working-directory: autogpt
       run: |
         $inputSequence = @(
           "CalculatorDev-GPT",
