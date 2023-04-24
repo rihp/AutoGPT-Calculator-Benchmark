@@ -8,10 +8,11 @@ jobs:
     steps:
     - name: Checkout AutoGPT repository
       uses: actions/checkout@v2
+      with:
         repository: Significant-Gravitas/Auto-GPT
         ref: v0.2.2
         path: autogpt
-
+        
     - name: Set up Python 3.10
       uses: actions/setup-python@v2
       with:
