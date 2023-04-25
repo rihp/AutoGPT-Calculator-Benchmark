@@ -1,4 +1,4 @@
-name: AutoGPT Workflow
+name: AutoGPT Ubuntu Workflow
 
 on: workflow_dispatch
 
