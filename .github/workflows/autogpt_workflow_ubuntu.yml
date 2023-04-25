@@ -31,11 +31,6 @@ jobs:
     - name: Ensure Docker is running
       run: |
         docker info
-        
-    - name: Install the Python 3 Alpine Image in Docker
-      run: |
-        echo 'FROM alpine:latest\nRUN apk add --no-cache python3' > Dockerfile
-        docker build -t python3-alpine .
 
     - name: Configure .env file
       working-directory: autogpt
