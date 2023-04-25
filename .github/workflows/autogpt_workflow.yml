@@ -21,7 +21,7 @@ jobs:
     - name: Set up Docker
       run: |
         curl -o DockerDesktop.exe https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
-        "Docker Desktop Installer.exe" install --quiet --accept-license
+        Start-Process 'Docker Desktop Installer.exe' -Wait install --quiet --accept-license
 
     - name: Ensure Docker is running
       run: |
