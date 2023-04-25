@@ -17,6 +17,13 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.10'
+        
+    - name: Upgrade pip and install dependencies
+      working-directory: autogpt
+      run: |
+        sudo apt-get update && sudo apt-get install -f && sudo apt-get dist-upgrade && sudo apt-get remove package-name
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
     - name: setup-docker
       uses: docker-practice/actions-setup-docker@1.0.11
@@ -29,12 +36,6 @@ jobs:
       run: |
         echo 'FROM alpine:latest\nRUN apk add --no-cache python3' > Dockerfile
         docker build -t python3-alpine .
-
-    - name: Upgrade pip and install dependencies
-      working-directory: autogpt
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
 
     - name: Configure .env file
       working-directory: autogpt
