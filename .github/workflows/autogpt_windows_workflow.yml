@@ -1,4 +1,4 @@
-name: AutoGPT Workflow
+name: AutoGPT Windows Workflow
 
 on: workflow_dispatch
 
