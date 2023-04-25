@@ -18,12 +18,19 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+    - name: Set up Docker
+      run: |
+        curl -o DockerDesktop.exe https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
+        start /w "" "Docker Desktop Installer.exe" install --quiet --accept-license
 
     - name: Ensure Docker is running
       run: |
         docker info
+        
+    - name: Install the Python 3 Alpine Image in Docker
+      run: |
+        echo 'FROM alpine:latest\nRUN apk add --no-cache python3' > Dockerfile
+        docker build -t python3-alpine .
 
     - name: Upgrade pip and install dependencies
       working-directory: autogpt
