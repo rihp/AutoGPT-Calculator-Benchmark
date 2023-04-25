@@ -21,7 +21,7 @@ jobs:
     - name: Upgrade pip and install dependencies
       working-directory: autogpt
       run: |
-        sudo apt-get update && sudo apt-get install -f && sudo apt-get dist-upgrade && sudo apt-get remove package-name
+        sudo apt-get update && sudo apt-get dist-upgrade
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
