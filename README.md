@@ -1,6 +1,6 @@
 # AutoGPT-Calculator-Benchmark
 
-This is a benchmark for Auto-GPT that generates a calculator script called 'calculator-gpt.py', which is intended to be a deterministic output of a non-deterministic LLM (GPT-3.5-turbo). calculator-gpt.py is created with a preset series of Auto-GPT inputs. Once calculator-gpt.py is created, it is tested for deterministic output, and Auto-GPT is evaluated on performance benchmarks:
+This is a GitHub Actions workflow benchmark for Auto-GPT that generates a calculator script called 'calculator-gpt.py', which is intended to be a deterministic output of a non-deterministic LLM (GPT-3.5-turbo). calculator-gpt.py is created with a preset series of Auto-GPT inputs. Once calculator-gpt.py is created, it is tested for deterministic output, and Auto-GPT is evaluated on performance benchmarks:
 
 1) The functionality of calculator-gpt.py - does the script perform every task the user requested?
 2) OpenAI API token cost of the entire session
