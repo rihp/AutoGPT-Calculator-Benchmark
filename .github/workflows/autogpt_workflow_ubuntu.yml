@@ -1,0 +1,71 @@
+name: AutoGPT Workflow
+
+on: workflow_dispatch
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout AutoGPT repository
+      uses: actions/checkout@v2
+      with:
+        repository: Significant-Gravitas/Auto-GPT
+        ref: v0.2.2
+        path: autogpt
+        
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      with:
+        driver: docker-container
+        buildkitd-flags: --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
+        install: true
+        use: true
+
+    - name: Ensure Docker is running
+      run: |
+        docker info
+        
+    - name: Install the Python 3 Alpine Image in Docker
+      run: |
+        echo 'FROM alpine:latest\nRUN apk add --no-cache python3' > Dockerfile
+        docker build -t python3-alpine .
+
+    - name: Upgrade pip and install dependencies
+      working-directory: autogpt
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Configure .env file
+      working-directory: autogpt
+      run: |
+        templateContent=$(cat .env.template)
+        apiKeyReplacement=${templateContent/your-openai-api-key/${{ secrets.OPENAI_API_KEY }}}
+        configContent=${apiKeyReplacement/EXECUTE_LOCAL_COMMANDS=False/EXECUTE_LOCAL_COMMANDS=True}
+        echo "$configContent" > .env
+
+    - name: Create auto-gpt.json file
+      working-directory: autogpt
+      run: |
+        touch auto-gpt.json
+
+    - name: Run AutoGPT command
+      working-directory: autogpt
+      run: |
+        inputSequence=(
+          "CalculatorDev-GPT"
+          "an AI designed to write a calculator app named 'calculator-gpt.py' in Python. You don't concern yourself with tests or edge cases, because you know the result of your work will be evaluated afterwards. Speed and efficiency are your utmost concerns, so you create scripts as quickly as possible without requiring user input"
+          "Create a Python file called 'calculator-gpt.py' in the auto_gpt_workspace directory"
+          "Create distinct addition, subtraction, multiplication, and division functions in 'calculator-gpt.py'. This Python script will be used to perform mathematical operations. Ensure that 'calculator-gpt.py' can be used in the terminal. Example usage: 'python calculator-gpt.py 5*6' example output: '30'. Example usage 2: 'python calculator-gpt.py 81/9' example 2 output: '9'"
+          "Modify the script so when the result of a calculation is ever 42, instead of outputting the result, calculator-gpt.py will output only the text string 'The answer to life, the universe, and everything'"
+          "Check 'calculator-gpt.py' for any redundancy and ensure it's clean, minimal, and readable"
+          ""
+          "y -15"
+          "n"
+        )
+        printf '%s\n' "${inputSequence[@]}" | python -m autogpt --gpt3only
