@@ -66,6 +66,13 @@ jobs:
             "n"
           )
           printf '%s\n' "${inputSequence[@]}" | python -m autogpt --gpt3only
+          
+      - name: Upload deploy.yaml as artifact
+        uses: actions/upload-artifact@v2
+        working-directory: autogpt
+        with:
+          name: gpt-k8s-deploy-yaml
+          path: auto_gpt_workspace/deploy.yaml
 
       - name: Set up Kubectl
         uses: azure/setup-kubectl@v1
