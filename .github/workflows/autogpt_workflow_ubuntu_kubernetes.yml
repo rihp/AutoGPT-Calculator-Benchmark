@@ -62,7 +62,7 @@ jobs:
             "Implement best practices for container security and compliance to minimize risk of breaches and data loss."
             "Troubleshoot any deployment-related issues that may arise and provide actionable recommendations for resolving them promptly."
             ""
-            "y -4"
+            "y -10"
             "n"
           )
           printf '%s\n' "${inputSequence[@]}" | python -m autogpt --gpt3only
@@ -94,7 +94,7 @@ jobs:
       - name: Display deploy.yaml content
         working-directory: autogpt
         run: |
-          cat deploy.yaml
+          cat auto_gpt_workspace/deploy.yaml
 
       - name: Validate deploy.yaml
         working-directory: autogpt
