@@ -71,8 +71,8 @@ jobs:
       uses: azure/setup-kubectl@v1
       with:
         version: 'latest'
-
+        
     - name: Validate deploy.yaml
       working-directory: autogpt
       run: |
-        kubectl apply --dry-run=client --validate -f deploy.yaml
+        kubectl apply --dry-run=client --validate --context='' -f deploy.yaml
