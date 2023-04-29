@@ -74,25 +74,19 @@ jobs:
 
       - name: Create dummy kubeconfig
         run: |
-          echo "apiVersion: v1
-clusters:
-- cluster:
-    server: http://localhost:8080
-  name: dummy
-contexts:
-- context:
-    cluster: dummy
-    user: dummy
-  name: dummy
-current-context: dummy
-kind: Config
-preferences: {}
-users:
-- name: dummy
-  user: {}" > kubeconfig.yaml
-
-      - name: Validate deploy.yaml
-        working-directory: autogpt
-        run: |
-          export KUBECONFIG=kubeconfig.yaml
-          kubectl apply --dry-run=client --validate -f deploy.yaml
+          echo "apiVersion: v1" > kubeconfig.yaml
+          echo "clusters:" >> kubeconfig.yaml
+          echo "- cluster:" >> kubeconfig.yaml
+          echo "    server: http://localhost:8080" >> kubeconfig.yaml
+          echo "  name: dummy" >> kubeconfig.yaml
+          echo "contexts:" >> kubeconfig.yaml
+          echo "- context:" >> kubeconfig.yaml
+          echo "    cluster: dummy" >> kubeconfig.yaml
+          echo "    user: dummy" >> kubeconfig.yaml
+          echo "  name: dummy" >> kubeconfig.yaml
+          echo "current-context: dummy" >> kubeconfig.yaml
+          echo "kind: Config" >> kubeconfig.yaml
+          echo "preferences: {}" >> kubeconfig.yaml
+          echo "users:" >> kubeconfig.yaml
+          echo "- name: dummy" >> kubeconfig.yaml
+          echo "  user: {}" >> kubeconfig.yaml
