@@ -90,3 +90,14 @@ jobs:
           echo "users:" >> kubeconfig.yaml
           echo "- name: dummy" >> kubeconfig.yaml
           echo "  user: {}" >> kubeconfig.yaml
+
+      - name: Display deploy.yaml content
+        working-directory: autogpt
+        run: |
+          cat deploy.yaml
+
+      - name: Validate deploy.yaml
+        working-directory: autogpt
+        run: |
+          export KUBECONFIG=kubeconfig.yaml
+          kubectl apply --dry-run=client --validate -f deploy.yaml
