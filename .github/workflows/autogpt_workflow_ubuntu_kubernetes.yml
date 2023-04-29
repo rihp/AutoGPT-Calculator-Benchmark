@@ -1,0 +1,62 @@
+name: AutoGPT Ubuntu Workflow
+
+on: workflow_dispatch
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout AutoGPT repository
+      uses: actions/checkout@v2
+      with:
+        repository: Significant-Gravitas/Auto-GPT
+        ref: v0.2.2
+        path: autogpt
+        
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+        
+    - name: Upgrade pip and install dependencies
+      working-directory: autogpt
+      run: |
+        sudo apt-get update && sudo apt-get dist-upgrade
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: setup-docker
+      uses: docker-practice/actions-setup-docker@1.0.11
+
+    - name: Ensure Docker is running
+      run: |
+        docker info
+
+    - name: Configure .env file
+      working-directory: autogpt
+      run: |
+        templateContent=$(cat .env.template)
+        apiKeyReplacement=${templateContent/your-openai-api-key/${{ secrets.OPENAI_API_KEY }}}
+        configContent=${apiKeyReplacement/EXECUTE_LOCAL_COMMANDS=False/EXECUTE_LOCAL_COMMANDS=True}
+        echo "$configContent" > .env
+
+    - name: Create auto-gpt.json file
+      working-directory: autogpt
+      run: |
+        touch auto-gpt.json
+
+    - name: Run AutoGPT command
+      working-directory: autogpt
+      run: |
+        inputSequence=(
+          "K8sGPT"
+          "an AI assistant that specializes in Kubernetes deployment configuration, providing expert guidance to ensure your containerized applications run smoothly and efficiently."
+          "creat a kubernetes deploy yml file namednginxdeploy, which includes 10 instances of a container called nginx-dep and an image of nginx:1.21.1-alpine with the port TCP 80 defined."
+          "Optimize the deployment file to ensure efficient resource utilization and high availability while minimizing downtime."
+          "Implement best practices for container security and compliance to minimize risk of breaches and data loss."
+          "Troubleshoot any deployment-related issues that may arise and provide actionable recommendations for resolving them promptly."
+          "Stay up-to-date with the latest developments and trends in Kubernetes deployment configuration to provide you with the most up-to-date guidance and insights."
+          "y -15"
+          "n"
+        )
+        printf '%s\n' "${inputSequence[@]}" | python -m autogpt --gpt3only
