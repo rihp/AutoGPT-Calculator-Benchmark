@@ -71,8 +71,38 @@ jobs:
       uses: azure/setup-kubectl@v1
       with:
         version: 'latest'
-        
-    - name: Validate deploy.yaml
-      working-directory: autogpt
+
+
+    - name: Create dummy kubeconfig
       run: |
-        kubectl apply --dry-run=client --validate --context='' -f deploy.yaml
+        echo "apiVersion: v1
+
+clusters:
+    - cluster:
+        server: http://localhost:8080
+      name: dummy
+    contexts:
+
+    - context:
+        cluster: dummy
+        user: dummy
+      name: dummy
+    current-context: dummy
+    kind: Config
+    preferences: {}
+    users:
+    
+    - name: dummy
+      user: {}" > kubeconfig.yaml
+
+        - name: Validate deploy.yaml
+          working-directory: autogpt
+          run: |
+            export KUBECONFIG=kubeconfig.yaml
+            kubectl apply --dry-run=client --validate -f deploy.yaml
+
+
+        - name: Validate deploy.yaml
+          working-directory: autogpt
+          run: |
+            kubectl apply --dry-run=client --validate --context='' -f deploy.yaml
